@@ -66,11 +66,28 @@ I have used the **prefect** library in python to automate the flow
 
 ## Screenshots
 ### Prefect UI:
+- Click on the run on the top right corner and select quick run to trigger a manual run
+
 ![PrefectUI Image](images/PrefectUI.png)
-Click on the run on the top right corner and select quick run to trigger a manual run
+
+### Prefect deployments
+- On this page you can look at progress of the run, and in the artifacts tab you can look at the various information that were generated
 
 ![Prefect-deployment](images/Prefect-Deployment.png)
-On this page you can look at progress of the run, and in the artifacts tab you can look at the various information that were generated
+
+### agents-daily-summary artifact
+![Agents-summary](images/agents-summary.png)
+
+### Daily summary
+![Daily-summary](images/daily-summary.png)
+
+### Agent wise orders
+![Agent-wise-orders](images/Agent-orders.png)
+
+### Orders-Left
+![Orders-left](images/Orders-left.png)
+
+
 
 
 ## Running the Application with the webui
