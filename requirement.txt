@@ -1,0 +1,12 @@
+pandas
+scikit-learn
+numpy
+sqlalchemy
+fastdist
+numba
+pydantic
+falcon
+gunicorn
+streamlit
+ortools
+pydantic-settings
