@@ -38,14 +38,15 @@ Ensure that you have `sqlite3` installed on your system.
    pip install -r requirements.txt
    ```
 ## Setting up the automated setup
-I have used the **prefect** library in python to automate the flow
+- I have used the **prefect** library in python to automate the flow
 
-### 1. **Run the Server**:
+- Execute all the commands from inside the project folder
+### 1. **Run the Server**: 
    Use `gunicorn` to start the server with the following command:
    ```bash
    gunicorn -w 1 -b 127.0.0.1:8000 main:app --timeout 300
    ```
-### 2. **Run the prefect server**:
+### 2. **Run the prefect server**: (run in parallel terminal)
    ```bash 
    prefect server start
    ```
@@ -54,11 +55,11 @@ I have used the **prefect** library in python to automate the flow
    prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api
    ```    
    specify the port you are using, by default it is 4200
-### 3. **Start a prefect workpool**:
+### 3. **Start a prefect workpool**:(run in parallel terminal)
    ```bash
    prefect worker start -p my-work-pool
    ```
-### 4. **Initialise deployment**
+### 4. **Initialise deployment**: (run in parallel terminal)
    ```bash
    python3 flows.py
    ```
