@@ -37,9 +37,43 @@ Ensure that you have `sqlite3` installed on your system.
    ```bash
    pip install -r requirements.txt
    ```
+## Setting up the automated setup
+I have used the **prefect** library in python to automate the flow
+
+### 1. **Run the Server**:
+   Use `gunicorn` to start the server with the following command:
+   ```bash
+   gunicorn -w 1 -b 127.0.0.1:8000 main:app --timeout 300
+   ```
+### 2. **Run the prefect server**:
+   ```bash 
+   prefect server start
+   ```
+### 3. **set environment variable**
+   ```bash
+   prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api
+   ```    
+   specify the port you are using, by default it is 4200
+### 3. **Start a prefect workpool**:
+   ```bash
+   prefect worker start -p my-work-pool
+   ```
+### 4. **Initialise deployment**
+   ```bash
+   python3 flows.py
+   ```
+   open the link you get, you will be taken the prefect ui, which lists the info about the deployments, you can click run->quick run to initiate a manual trigger or it will be triggered everyday 9:00 AM
+
+## Screenshots
+### Prefect UI:
+![PrefectUI Image](images/PrefectUI.png)
+Click on the run on the top right corner and select quick run to trigger a manual run
+
+![Prefect-deployment](images/Prefect-Deployment.png)
+On this page you can look at progress of the run, and in the artifacts tab you can look at the various information that were generated
 
 
-## Running the Application
+## Running the Application with the webui
 
 ### 1. **Run the Server**:
    Use `gunicorn` to start the server with the following command:
@@ -95,6 +129,27 @@ To ensure clean allocation of orders to agents, follow the order of tabs below:
 5. **Orders Left**: Check the remaining orders in the warehouse.
 6. **Worker Check-Out**: Marks the end of the day and resets agent stats.
 
+## Screenshots:
+### Sign-in tab:
+![Sign-in Image](images/sign_in.png)
+
+### Order-allocation tab:
+![order allocation](images/order_allocation.png)
+
+### Agents info tab:
+![Agentinfo](images/Agent_info.png)
+
+### Agent Orders tab:
+![AgentORders](images/agent_orders.png)
+
+### Orders left tab:
+![OrdersLeft](images/Orders_left.png)
+
+### Check-out tab:
+![Checkout](images/Agents_checkout.png)
+
+### Upload orders tab:
+![UploadOrders](images/orders_upload.png)
 
 ### Idea behind the implementation:
 
@@ -119,26 +174,4 @@ For the **Travelling Salesman** algorithm, I used **Google OR-Tools**, as it is 
 
 For the same reason of speed and efficiency, I used the **fastdist** library to calculate the distance matrix.
 
-
-## Screenshots:
-### Sign-in tab:
-![Sign-in Image](images/sign_in.png)
-
-### Order-allocation tab:
-![order allocation](images/order_allocation.png)
-
-### Agents info tab:
-![Agentinfo](images/Agent_info.png)
-
-### Agent Orders tab:
-![AgentORders](images/agent_orders.png)
-
-### Orders left tab:
-![OrdersLeft](images/Orders_left.png)
-
-### Check-out tab:
-![Checkout](images/Agents_checkout.png)
-
-### Upload orders tab:
-![UploadOrders](images/orders_upload.png)
 

@@ -10,3 +10,4 @@ gunicorn
 streamlit
 ortools
 pydantic-settings
+prefect

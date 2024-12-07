@@ -4,6 +4,7 @@ from database import get_db
 from table import AgentsBigPic, Warehouse,OrdersBigPic
 from sqlalchemy.orm import Session
 from utils import generate_orders
+from sqlalchemy import and_
 
 class OrderAllocation:
     def on_post(self, req, resp):
@@ -32,6 +33,7 @@ class OrderAllocation:
         
         resp.status = falcon.HTTP_200
         resp.media = {"message": "Order allocation has been done for all warehouses"}
+        session.close()
 
 class WorkerCheckIn:
     def on_post(self, req, resp):
@@ -46,6 +48,7 @@ class WorkerCheckIn:
         # Respond with the number of agents marked as signed in
         resp.status = falcon.HTTP_200
         resp.media = {"message": f"{no_present} agents have been randomly marked as checked in."}
+        session.close()
 
 class WorkerCheckOut:
     def on_post(self, req, resp):
@@ -60,6 +63,7 @@ class WorkerCheckOut:
         # Respond with the number of agents marked as signed in
         resp.status = falcon.HTTP_200
         resp.media = {"message": f"agents have been marked checked out."}
+        session.close()
 
 class AgentsInfo:
     def on_get(self, req, resp):
@@ -83,10 +87,14 @@ class AgentsInfo:
                 "total_earnings": earnings,
                 "is_checked_in": agent.is_checked_in,
             })
-        cost_per_order = total_expense/total_orders
+        if total_orders>0:
+            cost_per_order = total_expense/total_orders
+        else:
+            cost_per_order = 0
 
         resp.status = falcon.HTTP_200
         resp.media = {"agents": agents_info,"total_no_of_orders": total_orders,"cost_per_order":cost_per_order}
+        session.close()
 
 class AgentOrders:
     def on_get(self, req, resp, agent_id):
@@ -107,22 +115,27 @@ class AgentOrders:
 
         resp.status = falcon.HTTP_200
         resp.media = {"orders": orders_info}
+        session.close()
 
 class OrdersLeft:
     def on_get(self,req,resp):
         session: Session = next(get_db())
 
-        orders = session.query(OrdersBigPic).filter(OrdersBigPic.is_delivered==False).all()
-        
+        warehouses_ids = [warehouse.id for warehouse in session.query(Warehouse).all()]
+
         orders_info = []
-        for order in orders:
+        for warehouse_id in warehouses_ids:
+            orders = session.query(OrdersBigPic).filter(and_(OrdersBigPic.is_delivered==False,OrdersBigPic.warehouse_id==warehouse_id)).all()
+            no_of_orders = len(orders)
             orders_info.append({
-                "id": order.id,
-                "warehouse_id": order.warehouse_id
-            })
+                    "warehouse_id": warehouse_id,
+                    "no_of_orders": no_of_orders
+                })
+        
 
         resp.status = falcon.HTTP_200
         resp.media = {"orders": orders_info}
+        session.close()
 
 class UploadOrders:
     def on_post(self,req,resp):
@@ -136,6 +149,7 @@ class UploadOrders:
         else:  # If there was an error during order generation
             resp.status = falcon.HTTP_500
             resp.media = {"message": "Failed to generate orders due to an error."}
+        session.close()
 
 app = falcon.App()
 
@@ -155,4 +169,4 @@ app.add_route('/checkout/',worker_checkOut)
 app.add_route('/agent_info/',agents_info)
 app.add_route('/agent_orders/{agent_id}',agent_orders)
 app.add_route('/orders_left/',orders_left)
-app.add_route('/upload_orders', upload_orders)
+app.add_route('/upload_orders/', upload_orders)

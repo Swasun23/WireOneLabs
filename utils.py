@@ -1,7 +1,7 @@
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 import math
 from table import Warehouse,OrdersBigPic
-from random import uniform
+from random import uniform,randint
 
 def dist_between_points(x1,y1,x2,y2):
     return math.sqrt((x1-x2)**2 + (y2-y1)**2)
@@ -51,7 +51,8 @@ def generate_orders(session):
     try:
         warehouse_info = session.query(Warehouse).all()
         for warehouse in warehouse_info:
-            for i in range(1200):
+            no_of_orders = randint(600,1200)
+            for i in range(no_of_orders):
                 wh_id = warehouse.id
                 wh_x = warehouse.x_coord
                 wh_y = warehouse.y_coord

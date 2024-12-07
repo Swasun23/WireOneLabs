@@ -1,9 +1,10 @@
 import streamlit as st
 import requests
 import pandas as pd
+from config import settings
 
 # Define the base URL for the Falcon API
-BASE_URL = "http://localhost:8000"
+BASE_URL = settings.API_ENDPOINT_BASE_URL
 
 st.title("Delivery Assignment System")
 

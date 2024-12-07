@@ -302,10 +302,11 @@ def mark_agent_check_in(session):
     if not agents:
         return None
 
-    # Calculate 80% of the total agents
-    eighty_percent_attnd = int(0.8 * len(agents))
+    
+    attnd_percentage = random.randint(60,90)
+    no_of_present_agents = int((attnd_percentage/100) * len(agents))
 
-    selected_agents = random.sample(agents, eighty_percent_attnd)
+    selected_agents = random.sample(agents, no_of_present_agents)
 
     for agent in selected_agents:
         agent.is_checked_in = True 
